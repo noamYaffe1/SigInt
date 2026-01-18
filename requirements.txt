@@ -1,0 +1,19 @@
+requests>=2.31.0
+httpx>=0.25.0
+beautifulsoup4>=4.12.0
+Pillow>=10.0.0
+imagehash>=4.3.1
+mmh3>=4.0.0
+openai>=1.0.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+PyGithub>=2.1.0
+aiohttp>=3.9.0
+tqdm>=4.66.0
+PyYAML>=6.0.0
+cryptography>=41.0.0  # For TLS certificate parsing
+
+# Phase 2: Passive Discovery
+shodan>=1.31.0
+# Censys uses direct REST API calls (no SDK required)

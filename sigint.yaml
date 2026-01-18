@@ -1,0 +1,68 @@
+# SigInt Configuration File
+# ========================
+# Place this file in:
+#   - ./sigint.yaml (current directory)
+
+# Phase 1: Fingerprinting
+fingerprint:
+  max_iterations: 3        # Max LLM exploration iterations
+  model: "gpt-4o"          # OpenAI model to use
+  temperature: 0.2         # LLM temperature (lower = more deterministic)
+  
+  # Fingerprint Mode:
+  # - application: Find all deployments of software (DVWA, WordPress) - version agnostic
+  # - organization: Find all assets of company/brand (Monday.com, BSidesTLV) - brand focused
+  mode: "application"
+  include_version: false   # Include version/year in fingerprints (default: false)
+
+# Phase 2: Discovery
+discovery:
+  max_candidates: null     # Max candidates (null = no limit)
+  cache_ttl_days: 7        # Cache expiration in days
+  cache_strategy: "cache_and_new"  # cache_only, new_only, or cache_and_new
+  enrich_workers: 20       # Concurrent IPInfo enrichment workers
+  skip_enrichment: false   # Skip IPInfo enrichment
+  enabled_plugins:         # Discovery sources to use
+    - shodan
+    - censys
+
+# Phase 3: Verification
+verification:
+  timeout: 10              # Request timeout in seconds
+  workers: 10              # Concurrent verification workers
+  fetch_tls: true          # Fetch TLS certs for verified hosts
+  tls_timeout: 5           # TLS connection timeout
+  
+  # Additive scoring - points awarded per probe match
+  # Score = sum of matched points (capped at max_score)
+  # Example: favicon(80) + title(15) + 1 body pattern(15) = 110 → capped at 100
+  probe_points:
+    favicon_hash: 80       # Favicon hash match
+    image_hash: 50         # Per image hash match
+    title_match: 15        # HTML title pattern match
+    body_match: 15         # Per body pattern match
+    max_score: 100         # Score cap
+  
+  # Classification thresholds (based on max_score of 100)
+  score_thresholds:
+    verified: 80           # Minimum score for "verified"
+    likely: 50             # Minimum score for "likely"
+    partial: 30            # Minimum score for "partial"
+
+# Export settings
+export:
+  default_formats:         # Default export formats
+    - json
+    # - csv
+    # - html
+  output_dir: "output/exports"
+  min_score: 0             # Minimum score to include
+  include_no_match: true   # Include 0-score results
+
+# Output directories
+output:
+  base_dir: "output"
+  fingerprints_dir: "output/fingerprints"
+  candidates_dir: "output/candidates"
+  exports_dir: "output/exports"
+  cache_dir: "output/cache"
