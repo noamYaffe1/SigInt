@@ -71,6 +71,9 @@ pip install -r requirements.txt
 
 cp .env.example .env
 # Edit .env with your API keys
+
+python main.py config init
+# Optional: Edit sigint.yaml to customize settings
 ```
 
 ### API Keys
